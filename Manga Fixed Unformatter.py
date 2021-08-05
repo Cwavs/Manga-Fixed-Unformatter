@@ -25,5 +25,5 @@ width, height = subprocess.run(["magick", "identify", "-format", "%w;%h", files[
 print("Splitting Pages...")
 # Set those as the max sizes for every page, this also "crops" the cover to its own sizes
 for f in files:
-    subprocess.run(["magick", "mogrify", "-path", str(out_path), "-crop", f"{width}x{height}!", "-reverse", "-quality", "100", f])
+    subprocess.run(["magick", "mogrify", "-path", str(out_path), "-crop", f"{width}:{height}!", "-reverse", "-quality", "100", f])
 print("Done!")
