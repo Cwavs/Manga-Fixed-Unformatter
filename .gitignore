@@ -1,0 +1,11 @@
+# IDE files #
+*.komodoproject
+.komodotools/
+
+# Py stuff
+__pycache__/
+*.py[cod]
+*$py.class
+__pycache__/
+.Python
+build/
