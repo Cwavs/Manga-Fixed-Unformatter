@@ -1,8 +1,24 @@
 # Manga-Fixed-Unformatter
-A very simple python script that undoes the Manga Fixed Format used by comixology on some manga.
+A somewhat simple python script that undoes the Manga Fixed Format used by comixology on some manga.
 
-Run the script/executable in the same folder as the image files. The script will take the double spreads and output single pages in the correct order in a subfolder called "out". It will also attempt to copy the cover page over and delete the split version, however the implementation is janky and may not work properly. Depending on the amount of pages, the final page may also end up broken, however I cannot be bothered to find a fix to this, so if this happens you'll have to copy it over manually and delete the broken version.
+Run the script or executable either from the folder where you wish to split the manga, or
+provide the `--directory` argument (short form `-d`) to point the script to the desired
+folder to split the images in.
+
+Works by checking the cover page and comparing the aspect ratio of the cover page to the last page
+to prevent splitting (and potentially breaking) a single page at the end.
+
+## Usage ##
+Assuming the Python script is being used with the directory argument:
+```bash
+python MangaFixedUnformatter.py --directory /path/to/manga/volume
+```
+Assuming the python script is being called from the target directory:
+```bash
+python D:\Tools\MangaFixedUnformatter.py
+```
+Arguments and usage should be the same for the executable release version.
 
 # Dependencies
-1. Python (Not needed for the executable version)
+1. Python >= 3.5 (Not needed for the executable version)
 2. Image Magick
