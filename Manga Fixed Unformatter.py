@@ -1,6 +1,18 @@
 import os
 from pathlib import Path
 import subprocess
+import argparse
+
+parser = argparse.ArgumentParser(description="Split all combined manga pages \
+                                 in a directory for easier reading!\n\
+                                 Made by Cwavs & Riven",
+                                 prog="Manga Fixed Unformatter")
+parser.add_argument("--directory", "-d", dest="target", type=str,
+                    default=str(Path.cwd()),
+                    help="Specify the directory to take the images from.")
+parser.add_argument("--debug", "-D", dest="debug", action="store_true",
+                    help="Turn on the spammy debug output in an attempt to\
+help us fix bugs and unbreak the script.")
 
 def blind_copy(file: str, p_out: Path) -> None:
     """Blindly copy `file` to the output path with no processing.
@@ -29,14 +41,13 @@ def truncate_path(target: Path) -> None:
             # Then `rm -rf f`
             f.rmdir()
 
+args = parser.parse_args()
 print("Manga Fixed Unformatter V1.0")
 print("Written by Cwavs, with lots of pain (fuck you image magick docs).\
-       Small fixes made by Riven, with lots of love.")
-# Account for users being idiots
-print(f"Currently looking in {Path.cwd()}. Is this correct?")
-target = input("Provide path or press enter > ") or Path.cwd()
-# Make sure the path is absolute
-target = Path(str(target)).resolve()
+\nSmall fixes made by Riven, with lots of love.")
+if args.debug: print("Debugging output turned on! Expect spammy behavior!")
+target = Path(args.target).resolve()
+if args.debug: print(f"Currently looking in {Path.cwd()}.")
 if not target.exists():
     print("Provided directory does not exist. Try again.")
     # Exit and notify the system there was an error.
@@ -50,13 +61,18 @@ files = sorted(target.glob("*.png"))
 # Grab the cover page width and height
 width, height = subprocess.run(["magick", "identify", "-format", "%w;%h", files[0]], stdout=subprocess.PIPE).stdout.decode('utf-8').split(";")
 lwidth, lheight = width, height = subprocess.run(["magick", "identify", "-format", "%w;%h", files[-1]], stdout=subprocess.PIPE).stdout.decode('utf-8').split(";")
+if args.debug:
+    print(f"Cover sizes (wxh): {width}x{height}. AR {int(width)/int(height)}")
+    print(f"Last page sizes (wxh): {lwidth}x{lheight}. AR {int(lwidth)/int(lheight)}")
 blind_copy(files[0], out_path)
 files = files[1:]
 if int(width)/int(height) == int(lwidth)/int(lheight):
+    if args.debug: print("Blindly copying final page...")
     blind_copy(files[-1], out_path)
     files = files[:-1]
 print("Splitting Pages...")
 # Set those as the max sizes for every page, this also "crops" the cover to its own sizes
 for f in files:
+    if args.debug: print(f)
     subprocess.run(["magick", "mogrify", "-path", str(out_path), "-crop", f"50%x100%", "-reverse", "-quality", "100", f])
 print("Done!")
