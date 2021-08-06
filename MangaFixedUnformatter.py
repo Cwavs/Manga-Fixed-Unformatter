@@ -41,6 +41,12 @@ def truncate_path(target: Path) -> None:
             # Then `rm -rf f`
             f.rmdir()
 
+def check_AR(cover: float, lastpage: float, thresh: float=0.1) -> bool:
+    if cover > lastpage:
+        return (cover-lastpage) <= thresh
+    else:
+        return (lastpage-cover) <= thresh
+
 args = parser.parse_args()
 print("Manga Fixed Unformatter V1.0")
 print("Written by Cwavs, with lots of pain (fuck you image magick docs).\
@@ -66,7 +72,7 @@ if args.debug:
     print(f"Last page sizes (wxh): {lwidth}x{lheight}. AR {int(lwidth)/int(lheight)}")
 blind_copy(files[0], out_path)
 files = files[1:]
-if int(width)/int(height) == int(lwidth)/int(lheight):
+if check_AR(int(width)/int(height), int(lwidth)/int(lheight)):
     if args.debug: print("Blindly copying final page...")
     blind_copy(files[-1], out_path)
     files = files[:-1]
