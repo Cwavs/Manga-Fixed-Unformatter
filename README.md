@@ -1,3 +1,6 @@
+## NOTE ##
+Due to recent changes in how Comixology works, this script is no longer needed to rip from there, Comixology purchases are now avalible through a Kindle library, allowing you to rip them in higher resolution than the previous chrome extension, and not in manga fixed format.
+
 # Manga-Fixed-Unformatter
 A somewhat simple python script that undoes the Manga Fixed Format used by comixology on some manga.
 
